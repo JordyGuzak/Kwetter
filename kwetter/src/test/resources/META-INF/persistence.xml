@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+
+    <persistence-unit name="test-pu" transaction-type="RESOURCE_LOCAL">
+        <class>domain.User</class>
+        <class>domain.Kweet</class>
+        <class>domain.Group</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://studmysql01.fhict.local:3306/dbi304606"/>
+            <property name="javax.persistence.jdbc.password" value="Guzzman21"/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.user" value="dbi304606"/>
+            <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
+            <property name="eclipselink.logging.logger" value="DefaultLogger"/>
+            <property name="eclipselink.logging.level" value="FINE"/>
+            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+        </properties>
+    </persistence-unit>
+</persistence>

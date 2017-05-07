@@ -1,0 +1,6 @@
+service\UserServiceTest.class
+dao\UserDaoJPATest.class
+domain\UserTest.class
+domain\KweetTest.class
+dao\UserDaoCollTest.class
+api\UserResourceTest.class

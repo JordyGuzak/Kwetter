@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:body>
+    <ui:composition template="/commonLayout.xhtml">
+        <ui:define name="content">
+            <h:outputScript library="js" name="websocket.js" target="body"/>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <h:panelGroup id="kweetsAdd">
+                            <h:form styleClass="form">
+                                <h1>What's happening?</h1>
+                                <div class="form-group">
+                                    <label for="kweet_message">Message</label>
+                                    <p:inputTextarea id="kweet_message" styleClass="form-control"
+                                                     value="#{kweetBean.message}" rows="5" cols="30"
+                                                     counter="display" maxlength="140"
+                                                     counterTemplate="{0} characters remaining."
+                                                     autoResize="false"/>
+                                        <h:outputText id="display"/>
+                                    <p:commandButton id="post_btn" value="Post" style="float:right; margin-top: 5px;"
+                                                     styleClass="btn btn-primary"
+                                                     update="timeline, latest_kweet"
+                                                     actionListener="#{kweetBean.postKweet()}">
+                                        <p:resetInput target="kweet_message"/>
+                                    </p:commandButton>
+                                </div>
+                            </h:form>
+                        </h:panelGroup>
+                        <h:panelGroup id="timeline">
+                            <h3>Timeline</h3>
+                            <ui:repeat value="#{kweetBean.getTimeLine(homeBean.user)}" var="kweet">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h:outputText value="#{kweet.owner.username}"/>
+                                        <h:outputText style="float: right;" value="#{kweet.postDate}">
+                                            <f:convertDateTime pattern="dd.MM.yyyy HH:mm"/>
+                                        </h:outputText>
+                                    </div>
+                                    <div class="panel-body">
+                                        <h:outputText value="#{kweet.message}"/>
+                                    </div>
+                                </div>
+                            </ui:repeat>
+                        </h:panelGroup>
+                        <div class="row">
+                            <h2>Websocket output</h2>
+                            <div class="well">
+                                <pre id="output"></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <h:panelGroup id="latest_kweet">
+                            <h2>Your tweets <strong>#{kweetBean.getKweetCount(homeBean.user)}</strong></h2>
+                            <p><strong>#{homeBean.user.username}:&nbsp;</strong>#{kweetBean.getLatestKweet(homeBean.user).message}</p>
+                        </h:panelGroup>
+                    </div>
+                </div>
+            </div>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

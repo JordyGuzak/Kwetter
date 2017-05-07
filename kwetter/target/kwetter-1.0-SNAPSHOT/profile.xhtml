@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:body>
+    <ui:composition template="/commonLayout.xhtml">
+        <ui:define name="content">
+            <div class="container">
+                <div class="row">
+                    <!-- Static navbar -->
+                    <nav class="navbar navbar-default">
+                        <div class="container-fluid">
+                            <div id="navbar" class="navbar-collapse collapse">
+                                <h:panelGroup id="navpanel">
+                                    <ul class="nav navbar-nav text-center">
+                                        <li><a href="#"><span>Kweets</span><br/><span
+                                                style="font-size: 75%">#{profileBean.kweetCount}</span></a></li>
+                                        <li><a href="#"><span>Followers</span><br/><span style="font-size: 75%">#{profileBean.followers.size()}</span></a>
+                                        </li>
+                                        <li><a href="#"><span>Following</span><br/><span style="font-size: 75%">#{profileBean.following.size()}</span></a>
+                                        </li>
+                                    </ul>
+                                </h:panelGroup>
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li>
+                                        <h:form id="follow_unfollow_form">
+                                            <p:commandLink styleClass="center-link" value="Follow"
+                                                           update="followers, follow_unfollow_form, navpanel"
+                                                           actionListener="#{profileBean.followUser}"
+                                                           rendered="#{profileBean.canFollow}"/>
+                                            <p:commandLink styleClass="center-link" value="Unfollow"
+                                                           update="followers, follow_unfollow_form, navpanel"
+                                                           rendered="#{!profileBean.canFollow and !profileBean.myProfile}"
+                                                           actionListener="#{profileBean.unFollowUser}"/>
+                                        </h:form>
+                                    </li>
+                                </ul>
+                            </div><!--/.nav-collapse -->
+                        </div><!--/.container-fluid -->
+                    </nav>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <p:graphicImage value="res/user2.png"/>
+                        <h1>#{profileBean.user.username}</h1>
+                        <div class="form-group">
+                            <label>Location: </label>#{profileBean.user.location}
+                        </div>
+                        <div class="form-group">
+                            <label>Website: </label>#{profileBean.user.website}
+                        </div>
+                        <div class="form-group">
+                            <label>Biography: </label>
+                            <p>#{profileBean.user.location}</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <h3>Kweets</h3>
+                        <h:panelGroup id="timeline">
+                            <ui:repeat value="#{profileBean.recentKweets}" var="kweet">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h:outputText value="#{kweet.owner.username}"/>
+                                        <h:outputText style="float: right;" value="#{kweet.postDate}">
+                                            <f:convertDateTime pattern="dd.MM.yyyy HH:mm"/>
+                                        </h:outputText>
+                                    </div>
+                                    <div class="panel-body">
+                                        <h:outputText value="#{kweet.message}"/>
+                                    </div>
+                                </div>
+                            </ui:repeat>
+                        </h:panelGroup>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <h:panelGroup>
+                                    <h:dataTable id="followers" styleClass="table" value="#{profileBean.followers}" var="user">
+                                        <h:column>
+                                            <f:facet name="header">Followers</f:facet>
+                                            <h:outputLink
+                                                    value="#{facesContext.externalContext.requestContextPath}/profile.xhtml">#{user.username}
+                                                <f:param name="user" value="#{user.username}"/>
+                                            </h:outputLink>
+                                        </h:column>
+                                    </h:dataTable>
+                                </h:panelGroup>
+                            </div>
+                            <div class="col-lg-6">
+                                <h:panelGroup>
+                                    <h:dataTable id="following" styleClass="table" value="#{profileBean.following}" var="user">
+                                        <h:column>
+                                            <f:facet name="header">Following</f:facet>
+                                            <h:outputLink
+                                                    value="#{facesContext.externalContext.requestContextPath}/profile.xhtml">#{user.username}
+                                                <f:param name="user" value="#{user.username}"/>
+                                            </h:outputLink>
+                                        </h:column>
+                                    </h:dataTable>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <c:if test="#{profileBean.myProfile}">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <h:panelGroup id="kweetsAdd">
+                                <h2>Post kweet</h2>
+                                <h:form styleClass="form">
+                                    <div class="form-group">
+                                        <label for="kweet_message">Message</label>
+                                        <p:inputTextarea id="kweet_message" styleClass="form-control"
+                                                         value="#{kweetBean.message}" rows="5" cols="30"
+                                                         counter="display" maxlength="140"
+                                                         counterTemplate="{0} characters remaining."
+                                                         autoResize="false"/>
+                                            <h:outputText id="display"/>
+                                    </div>
+                                    <p:commandButton id="post_btn" value="Post" style="float:right;"
+                                                     styleClass="btn btn-primary"
+                                                     update="timeline, navpanel" actionListener="#{kweetBean.postKweet()}">
+                                        <p:resetInput target="kweet_message" />
+                                    </p:commandButton>
+                                </h:form>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </c:if>
+            </div>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

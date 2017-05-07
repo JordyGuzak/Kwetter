@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job id="userimport" xmlns="http://xmlns.jcp.org/xml/ns/javaee" version="1.0">
+    <properties>
+        <property name="input_file" value="user_input.json" />
+    </properties>
+    <step id="main">
+        <chunk checkpoint-policy="item" item-count="5">
+            <reader ref="UserReader"></reader>
+            <processor ref="UserProcessor"></processor>
+            <writer ref="UserWriter"></writer>
+        </chunk>
+    </step>
+</job>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:body>
+    <ui:composition template="commonLayout.xhtml">
+        <ui:define name="content">
+            <h:panelGroup id="users">
+                <h1>Users</h1>
+                <h:form>
+                    <h:dataTable styleClass="table" value="#{userBean.users}" var="user">
+                        <h:column>
+                            <f:facet name="header">Name</f:facet>
+                            <h:outputLabel value="#{user.username}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header"> Age</f:facet>
+                            <h:outputLabel value="#{user.age}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Name</f:facet>
+                            <h:outputLabel value="#{user.email}"/>
+                        </h:column>
+                        <h:column>
+                            <h:commandButton styleClass="btn btn-danger" rendered="#{authBean.admin}" value="Remove"
+                                             action="#{userBean.removeUser(user)}">
+                                <f:ajax event="action" render="users"/>
+                            </h:commandButton>
+                        </h:column>
+                        <h:column>
+                            <h:outputLink value="profile.xhtml">Profile
+                                <f:param name="user" value="#{user.username}"/>
+                            </h:outputLink>
+                        </h:column>
+
+                    </h:dataTable>
+                </h:form>
+            </h:panelGroup>
+            <hr/>
+            <h:panelGroup id="usersAdd">
+                <h2>Add user</h2>
+                <h:form styleClass="form">
+                    <div class="form-group">
+                        <label for="add_name">Name</label>
+                        <h:inputText id="add_name" styleClass="form-control" value="#{userBean.name}"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="add_age">Age</label>
+                        <h:inputText id="add_age" styleClass="form-control" value="#{userBean.age}"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="add_email">Email</label>
+                        <h:inputText id="add_email" styleClass="form-control" value="#{userBean.email}"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="add_password">Password</label>
+                        <h:inputText id="add_password" styleClass="form-control" value="#{userBean.password}"/>
+                    </div>
+                    <h:commandButton styleClass="btn btn-primary" value="AddUser" action="#{userBean.addUser()}"/>
+                </h:form>
+            </h:panelGroup>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>
